@@ -1,0 +1,18 @@
+{
+	"description": "my dictionary",
+	"setting": {
+		"urlCheck": false,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true,
+		"nodeModules": true
+	},
+	"compileType": "miniprogram",
+	"appid": "wxb68e03b957eb1a9c",
+	"projectname": "mp_dic",
+	"miniprogramRoot": "dist/",
+	"libVersion": "2.3.0",
+	"cloudfunctionRoot": "src/cloud/",
+	"condition": {}
+}

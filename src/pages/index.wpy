@@ -1,0 +1,29 @@
+<style lang="less">
+</style>
+<template>
+  <view class="container">
+      <van-button type="default">默认按钮</van-button>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '首页',
+    usingComponents: {
+      'van-button': 'vant-weapp/dist/button/index'
+    }
+  };
+  components = {};
+  data = {};
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
