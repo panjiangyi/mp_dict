@@ -1,5 +1,4 @@
 <style lang="less">
-
 </style>
 <template>
   <view class="container">
@@ -31,16 +30,16 @@ export default class Note extends wepy.page {
   };
   components = {};
   data = {
-      blockStyle:'color:#000'
+    blockStyle: 'color:#000'
   };
 
   computed = {};
 
-  methods = {
-
-  };
+  methods = {};
 
   events = {};
-  onLoad() {}
+  onLoad({ language, group }) {
+    console.log(language, group);
+  }
 }
 </script>

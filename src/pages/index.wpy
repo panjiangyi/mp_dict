@@ -7,18 +7,15 @@
 </style>
 <template>
   <view class="container">
-    <demo-block title="English">
-      <van-cell-group>
-        <van-cell @tap="naviToNote('词典1')" title="词典1" value="内容" is-link="{{true}}" />
-        <van-cell @tap="naviToNote('词典2')" title="词典2" value="内容" is-link="{{true}}" />
-      </van-cell-group>
-    </demo-block>
-    <demo-block title="日本語">
-      <van-cell-group>
-        <van-cell @tap="naviToNote('词典1')" title="词典1" is-link="{{true}}" />
-        <van-cell @tap="naviToNote('词典2')" title="词典2" is-link="{{true}}" />
-      </van-cell-group>
-    </demo-block>
+    <repeat for="{{list}}" key="language" index="language" item="groups">
+      <demo-block title="{{language}}">
+        <van-cell-group>
+          <repeat for="{{groups}}" key="index" item="group">
+              <van-cell @tap="naviToNote" data-lan="{{language}}" data-group="{{group}}" title="{{group}}" is-link="{{true}}" />
+          </repeat>
+        </van-cell-group>
+      </demo-block>
+    </repeat>
   </view>
 </template>
 
@@ -26,7 +23,6 @@
 import wepy from 'wepy';
 import Utils from '../utils/utils';
 import dict from '../cloud/dictionary';
-
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '单词本',
@@ -38,28 +34,43 @@ export default class Index extends wepy.page {
   };
   components = {};
   data = {
-    words:[],
+    list: {}
   };
 
   computed = {
-    notes(){
-      console.log('words',this.words)
-    }
+    
   };
 
   methods = {
-    naviToNote(w){
-      Utils.navi('/pages/note')
+    naviToNote(d) {
+      const { lan, group } = d.currentTarget.dataset;
+      Utils.navi(`/pages/note?language=${lan}&group=${group}`);
     }
   };
 
   events = {};
 
-  async onLoad() {
+  onLoad() {
+    this.queryDict();
+    // dict.save('English','默认组','easy',['简单','很简单']);
+    // dict.save('English','默认组','hard',['难','很难']);
+    // dict.save('English','组2','JAVA',['编程语言','一个编程语言']);
+    // dict.save('English','组2','js',['编程语言','做网站']);
+    // dict.save('日本語','默认组','哇达西哇',['简单','很简单']);
+    // dict.save('日本語','组2','搜噶',['难','很难']);
+  }
+  async queryDict() {
     const data = await dict.all();
-    this.words = data;
+    const list = (this.list = {});
+    data.forEach(item => {
+      const { language, _id, meanings, group } = item;
+      if (list[language] == null) list[language] = new Set();
+      list[language].add(group);
+    });
+    for(let i in list){
+      list[i] = [...list[i]]
+    }
     this.$apply();
-    
   }
 }
 </script>

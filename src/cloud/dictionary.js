@@ -5,7 +5,6 @@ class Dictionary {
         wx.cloud.init({
             traceUser: true
         });
-        this._getOpenid()
         this.instantiateDb()
     }
     instantiateDb() {
@@ -30,12 +29,13 @@ class Dictionary {
         const res = await this.dict.doc(word).get();
         return res.data
     }
-    async save(word, meanings,language='english') {
+    async save(language,group,word, meanings) {
         const res = await this.dict.add({
             data: {
                 _id: word,
                 meanings,
-                language
+                language,
+                group
             }
         });
         if (res.errMsg !== 'collection.add:ok') {
