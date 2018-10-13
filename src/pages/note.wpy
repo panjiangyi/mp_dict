@@ -2,23 +2,21 @@
 </style>
 <template>
   <view class="container">
-        <demo-block title="student">
-            <van-cell-group>
-                <van-cell title="1. 学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生"/>
-                <van-cell title="2. 歇息"/>
-            </van-cell-group>
+    <repeat for="{{list}}" key="word_index" index="word_index" item="word">
+        <demo-block title="{{word._id}}">
+          <van-cell-group>
+            <repeat for="{{word.meanings}}" key="meaning_index" index="meaning_index" item="meaning">
+              <van-cell @tap="edit" data-word="{{word._id}}" data-idx="{{meaning_index}}" title="{{meaning_index+1}}. {{meaning}}" is-link="{{true}}"/>
+            </repeat>
+          </van-cell-group>
         </demo-block>
-        <demo-block title="student">
-            <van-cell-group>
-                <van-cell title="1. 学生"/>
-                <van-cell title="2. 歇息"/>
-            </van-cell-group>
-        </demo-block>
+    </repeat>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import dict from '../cloud/dictionary';
 export default class Note extends wepy.page {
   config = {
     navigationBarTitleText: 'note',
@@ -30,16 +28,30 @@ export default class Note extends wepy.page {
   };
   components = {};
   data = {
-    blockStyle: 'color:#000'
+    list: []
   };
 
   computed = {};
 
-  methods = {};
+  methods = {
+    edit(e) {
+      const { word, idx } = e.currentTarget.dataset;
+      console.log(word, idx);
+      /* 跳转到编辑页 */
+    }
+  };
 
   events = {};
-  onLoad({ language, group }) {
-    console.log(language, group);
+  onLoad(rule) {
+    console.log(rule);
+
+    this.queryDict(rule);
+  }
+  async queryDict(rule) {
+    const data = await dict.where(rule);
+    console.log(data);
+    this.list = data;
+    this.$apply();
   }
 }
 </script>

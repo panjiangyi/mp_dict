@@ -17,7 +17,7 @@ class Dictionary {
         return await Utils.getOpenid();
     }
     async all() {
-       const _openid = this._getOpenid()
+        const _openid = this._getOpenid()
         const res = await this.dict
             .where({
                 _openid
@@ -29,7 +29,7 @@ class Dictionary {
         const res = await this.dict.doc(word).get();
         return res.data
     }
-    async save(language,group,word, meanings) {
+    async save(language, group, word, meanings) {
         const res = await this.dict.add({
             data: {
                 _id: word,
@@ -44,6 +44,10 @@ class Dictionary {
         } else {
             return success
         }
+    }
+    async where(rule) {
+        const res = await this.dict.where(rule).get();
+        return res.data;
     }
 }
 

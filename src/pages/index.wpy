@@ -23,6 +23,7 @@
 import wepy from 'wepy';
 import Utils from '../utils/utils';
 import dict from '../cloud/dictionary';
+const cacheKey = 'groups';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '单词本',
@@ -37,9 +38,7 @@ export default class Index extends wepy.page {
     list: {}
   };
 
-  computed = {
-    
-  };
+  computed = {};
 
   methods = {
     naviToNote(d) {
@@ -61,15 +60,23 @@ export default class Index extends wepy.page {
   }
   async queryDict() {
     const data = await dict.all();
-    const list = (this.list = {});
+    const list = {};
     data.forEach(item => {
       const { language, _id, meanings, group } = item;
       if (list[language] == null) list[language] = new Set();
       list[language].add(group);
     });
-    for(let i in list){
-      list[i] = [...list[i]]
+    for (let i in list) {
+      list[i] = [...list[i]];
     }
+    this.cache(list);
+    this.getCache();
+  }
+  cache(d) {
+    wx.setStorageSync(cacheKey, d);
+  }
+  getCache() {
+    this.list = wx.getStorageSync(cacheKey);
     this.$apply();
   }
 }
