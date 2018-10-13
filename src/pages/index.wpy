@@ -2,7 +2,7 @@
 </style>
 <template>
   <view class="container">
-      <van-button type="default">默认按钮</van-button>
+      <van-cell title="单元格" value="内容" label="描述信息" border="{{ false }}" />
   </view>
 </template>
 
@@ -12,7 +12,7 @@ export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '首页',
     usingComponents: {
-      'van-button': 'vant-weapp/dist/button/index'
+      'van-cell': '../components/vant/cell'
     }
   };
   components = {};
