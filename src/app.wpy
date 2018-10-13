@@ -1,55 +1,35 @@
 <style lang="less">
 .container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
 }
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
-
-
+import wepy from 'wepy';
+import 'wepy-async-function';
+import Utils from './utils/utils';
 export default class extends wepy.app {
   config = {
-    pages: [
-      'pages/index'
-    ],
+    pages: ['pages/index', 'pages/note'],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
     }
-  }
+  };
 
   globalData = {
     userInfo: null
+  };
+
+  constructor() {
+    super();
+    this.use('requestfix');
+    wx.cloud.init({
+      traceUser: true
+    });
   }
 
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-
-  onLaunch() {
-  }
-
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
-  }
+  onLaunch() {}
 }
 </script>

@@ -1,0 +1,46 @@
+<style lang="less">
+
+</style>
+<template>
+  <view class="container">
+        <demo-block title="student">
+            <van-cell-group>
+                <van-cell title="1. 学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生学生"/>
+                <van-cell title="2. 歇息"/>
+            </van-cell-group>
+        </demo-block>
+        <demo-block title="student">
+            <van-cell-group>
+                <van-cell title="1. 学生"/>
+                <van-cell title="2. 歇息"/>
+            </van-cell-group>
+        </demo-block>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class Note extends wepy.page {
+  config = {
+    navigationBarTitleText: 'note',
+    usingComponents: {
+      'demo-block': '../components/vant/demo-block',
+      'van-cell': '../components/vant/cell',
+      'van-cell-group': '../components/vant/cell-group'
+    }
+  };
+  components = {};
+  data = {
+      blockStyle:'color:#000'
+  };
+
+  computed = {};
+
+  methods = {
+
+  };
+
+  events = {};
+  onLoad() {}
+}
+</script>

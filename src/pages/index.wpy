@@ -1,29 +1,65 @@
 <style lang="less">
+.title {
+  margin-right: 5px;
+  display: inline-block;
+  vertical-align: middle;
+}
 </style>
 <template>
   <view class="container">
-      <van-cell title="单元格" value="内容" label="描述信息" border="{{ false }}" />
+    <demo-block title="English">
+      <van-cell-group>
+        <van-cell @tap="naviToNote('词典1')" title="词典1" value="内容" is-link="{{true}}" />
+        <van-cell @tap="naviToNote('词典2')" title="词典2" value="内容" is-link="{{true}}" />
+      </van-cell-group>
+    </demo-block>
+    <demo-block title="日本語">
+      <van-cell-group>
+        <van-cell @tap="naviToNote('词典1')" title="词典1" is-link="{{true}}" />
+        <van-cell @tap="naviToNote('词典2')" title="词典2" is-link="{{true}}" />
+      </van-cell-group>
+    </demo-block>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import Utils from '../utils/utils';
+import dict from '../cloud/dictionary';
+
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: '首页',
+    navigationBarTitleText: '单词本',
     usingComponents: {
-      'van-cell': '../components/vant/cell'
+      'demo-block': '../components/vant/demo-block',
+      'van-cell': '../components/vant/cell',
+      'van-cell-group': '../components/vant/cell-group'
     }
   };
   components = {};
-  data = {};
+  data = {
+    words:[],
+  };
 
-  computed = {};
+  computed = {
+    notes(){
+      console.log('words',this.words)
+    }
+  };
 
-  methods = {};
+  methods = {
+    naviToNote(w){
+      Utils.navi('/pages/note')
+    }
+  };
 
   events = {};
 
-  onLoad() {}
+  async onLoad() {
+    const data = await dict.all();
+    this.words = data;
+    this.$apply();
+    
+  }
 }
 </script>
