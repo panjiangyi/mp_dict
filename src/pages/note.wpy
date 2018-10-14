@@ -3,10 +3,10 @@
 <template>
   <view class="container">
     <repeat for="{{list}}" key="word_index" index="word_index" item="word">
-        <demo-block title="{{word._id}}">
+        <demo-block title="{{word.word}}">
           <van-cell-group>
             <repeat for="{{word.meanings}}" key="meaning_index" index="meaning_index" item="meaning">
-              <van-cell @tap="edit" data-word="{{word._id}}" data-idx="{{meaning_index}}" title="{{meaning_index+1}}. {{meaning}}" is-link="{{true}}"/>
+              <van-cell @tap="edit" data-_id="{{word._id}}" title="{{meaning_index+1}}. {{meaning}}" is-link="{{true}}"/>
             </repeat>
           </van-cell-group>
         </demo-block>
@@ -17,6 +17,7 @@
 <script>
 import wepy from 'wepy';
 import dict from '../cloud/dictionary';
+import Utils from '../utils/utils';
 export default class Note extends wepy.page {
   config = {
     navigationBarTitleText: 'note',
@@ -35,21 +36,18 @@ export default class Note extends wepy.page {
 
   methods = {
     edit(e) {
-      const { word, idx } = e.currentTarget.dataset;
-      console.log(word, idx);
+      const {_id } = e.currentTarget.dataset;
       /* 跳转到编辑页 */
+      Utils.navi(`/pages/edit?_id=${_id}`);
     }
   };
 
   events = {};
   onLoad(rule) {
-    console.log(rule);
-
     this.queryDict(rule);
   }
   async queryDict(rule) {
     const data = await dict.where(rule);
-    console.log(data);
     this.list = data;
     this.$apply();
   }

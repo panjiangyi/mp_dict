@@ -9,7 +9,11 @@ import 'wepy-async-function';
 import Utils from './utils/utils';
 export default class extends wepy.app {
   config = {
-    pages: ['pages/index', 'pages/note'],
+    pages: [
+      'pages/index',
+      'pages/edit',
+     'pages/note',
+     ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',

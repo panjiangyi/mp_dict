@@ -18,6 +18,7 @@
   bindgetphonenumber="bindGetPhoneNumber"
   binderror="bindError"
   bindopensetting="bindOpenSetting"
+  form-type="submit"
 >
   <van-loading
     wx:if="{{ loading }}"

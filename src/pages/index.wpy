@@ -4,6 +4,12 @@
   display: inline-block;
   vertical-align: middle;
 }
+.icon {
+  color: rgb(238, 35, 68);
+  position: fixed;
+  bottom: 60rpx;
+  right: 60rpx;
+}
 </style>
 <template>
   <view class="container">
@@ -16,6 +22,9 @@
         </van-cell-group>
       </demo-block>
     </repeat>
+    <view @tap="addLanguage" class="icon">
+        <van-icon @click-icon.user="clickicon" name="add" size="128rpx"  />
+    </view>
   </view>
 </template>
 
@@ -28,6 +37,7 @@ export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '单词本',
     usingComponents: {
+      'van-icon': '../components/vant/icon',
       'demo-block': '../components/vant/demo-block',
       'van-cell': '../components/vant/cell',
       'van-cell-group': '../components/vant/cell-group'
@@ -44,6 +54,10 @@ export default class Index extends wepy.page {
     naviToNote(d) {
       const { lan, group } = d.currentTarget.dataset;
       Utils.navi(`/pages/note?language=${lan}&group=${group}`);
+    },
+    addLanguage(d){
+      console.log('添加语言');
+      Utils.navi(`/pages/edit`);
     }
   };
 
@@ -62,7 +76,7 @@ export default class Index extends wepy.page {
     const data = await dict.all();
     const list = {};
     data.forEach(item => {
-      const { language, _id, meanings, group } = item;
+      const { language, word, meanings, group } = item;
       if (list[language] == null) list[language] = new Set();
       list[language].add(group);
     });

@@ -1,5 +1,6 @@
 import Utils from '../utils/utils';
-import { success, fail } from './flag.js';
+import flag from './flag.js';
+const { success, fail } = flag;
 class Dictionary {
     constructor() {
         wx.cloud.init({
@@ -32,7 +33,7 @@ class Dictionary {
     async save(language, group, word, meanings) {
         const res = await this.dict.add({
             data: {
-                _id: word,
+                word,
                 meanings,
                 language,
                 group
@@ -44,6 +45,10 @@ class Dictionary {
         } else {
             return success
         }
+    }
+    async update(id, data) {
+        const res = await this.dict.doc(id).update({ data })
+        return success;
     }
     async where(rule) {
         const res = await this.dict.where(rule).get();

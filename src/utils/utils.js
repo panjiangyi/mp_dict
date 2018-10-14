@@ -4,6 +4,11 @@ export default class {
             url
         })
     }
+    static goback(delta=1){
+        wx.navigateBack({
+            delta
+        })
+    }
     static toastError(title = '添加失败') {
         wx.showToast({
             icon: 'none',

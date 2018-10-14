@@ -1,0 +1,151 @@
+<style lang="less">
+.retract {
+  padding: 20rpx 40rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <form bindsubmit="submit">
+        <van-cell-group>
+            <van-field
+            value="{{language}}"
+            name="language"
+            label="语言"
+            placeholder="请输入语言"
+            clearable="{{true}}"
+            />
+            <van-field
+            value="{{group}}"
+            name="group"
+            label="分组"
+            placeholder="请输入分组"
+            clearable="{{true}}"
+            />
+            <van-field
+            value="{{word}}"
+            name="word"
+            label="词句"
+            placeholder="请输入词句"
+            clearable="{{true}}"
+            />
+            <repeat for="{{meanings}}" key="index" index="index" item="item">
+                <van-field
+                value="{{item}}"
+                name="meaning{{index}}"
+                label="释义{{index+1}}"
+                placeholder="请输入释义"
+                clearable="{{true}}"
+                icon="{{index+1===meanings.length?'add':null}}"
+                bindclickicon="addMeaning"
+                @input="meaningInputed"
+                data-idx="{{index}}"
+                />
+            </repeat>
+        </van-cell-group>
+        <view class="retract">
+            <button form-type="submit" type="primary" size="large">添加</button>
+        </view>
+    </form>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import dict from '../cloud/dictionary';
+import Utils from '../utils/utils';
+import flag from '../cloud/flag';
+const { success, fail } = flag;
+const mode = {
+  add: 'add',
+  update: 'update'
+};
+export default class Edit extends wepy.page {
+  config = {
+    navigationBarTitleText: '编辑',
+    usingComponents: {
+      'demo-block': '../components/vant/demo-block',
+      'van-button': '../components/vant/button',
+      'van-field': '../components/vant/field',
+      'van-cell': '../components/vant/cell',
+      'van-cell-group': '../components/vant/cell-group'
+    }
+  };
+  components = {};
+  data = {
+    language: '',
+    group: '',
+    word: '',
+    meanings: [''],
+    pageMode: mode.add
+  };
+
+  computed = {};
+
+  methods = {
+    meaningInputed(d) {
+      const value = d.detail;
+      const idx = d.currentTarget.dataset.idx;
+      this.meanings[idx] = value;
+    },
+    addMeaning() {
+      this.meanings.push('');
+    },
+    submit(d) {
+      const pageMode = this.pageMode;
+      const originData = d.detail.value;
+      const meanings = [];
+      for (let key in originData) {
+        if (key.indexOf('meaning') > -1) {
+          meanings.push(originData[key]);
+        }
+      }
+      const { group, language, word } = originData;
+      const data = {
+        meanings,
+        group,
+        language,
+        word
+      };
+      if (pageMode === mode.add) {
+        this.add(data);
+      } else if (pageMode === mode.update) {
+        this.update(data);
+      }
+    }
+  };
+  async add({ language, group, word, meanings }) {
+    const res = await dict.save(language, group, word, meanings);
+    if (res === fail) {
+      Utils.toastError();
+      return;
+    }
+    Utils.goback();
+  }
+  async update(d) {
+    const res = await dict.update(this.id, d);
+    if (res === fail) {
+      Utils.toastError();
+      return;
+    }
+    Utils.goback();
+  }
+  onLoad(rule) {
+    if (JSON.stringify(rule) === '{}') {
+      this.pageMode = mode.add;
+    } else {
+      this.pageMode = mode.update;
+      this.queryDict(rule);
+    }
+  }
+  async queryDict(rule) {
+    const data = await dict.where(rule);
+    const { _id, group, language, word, meanings } = data[0];
+    this.id = _id;
+    this.language = language;
+    this.group = group;
+    this.word = word;
+    this.meanings = meanings;
+    this.$apply();
+  }
+}
+</script>
