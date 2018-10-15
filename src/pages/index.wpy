@@ -10,9 +10,24 @@
   bottom: 60rpx;
   right: 60rpx;
 }
+.welcome {
+  text-align: center;
+  margin: auto;
+  position: fixed;
+  top: 0;
+  bottom:0;
+  left: 0;
+  right: 0;
+  width: 300rpx;
+  height: 300rpx;
+}
 </style>
 <template>
   <view class="container">
+    <view class="welcome" wx:if="{{emptyPage}}">
+        <view>点加号</view>
+        <view>开始背单词吧</view>
+    </view>
     <repeat for="{{list}}" key="language" index="language" item="groups">
       <demo-block title="{{language}}">
         <van-cell-group>
@@ -48,14 +63,18 @@ export default class Index extends wepy.page {
     list: {}
   };
 
-  computed = {};
+  computed = {
+    emptyPage() {
+      return JSON.stringify(this.list) === '{}';
+    }
+  };
 
   methods = {
     naviToNote(d) {
       const { lan, group } = d.currentTarget.dataset;
       Utils.navi(`/pages/note?language=${lan}&group=${group}`);
     },
-    addLanguage(d){
+    addLanguage(d) {
       console.log('添加语言');
       Utils.navi(`/pages/edit?pageMode=group`);
     }
@@ -72,7 +91,7 @@ export default class Index extends wepy.page {
     // dict.save('日本語','默认组','哇达西哇',['简单','很简单']);
     // dict.save('日本語','组2','搜噶',['难','很难']);
   }
-  onShow(){
+  onShow() {
     this.queryDict();
   }
   async queryDict() {
