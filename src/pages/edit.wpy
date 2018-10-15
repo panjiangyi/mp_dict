@@ -1,6 +1,16 @@
 <style lang="less">
-.retract {
-  padding: 20rpx 40rpx;
+
+.cancelBtn {
+  background-color: #fff;
+  color: #000;
+  border-color: #fff;
+}
+.btnCon {
+  display: flex;
+  justify-content: center;
+}
+.editBtn {
+  flex-basis: 45%;
 }
 </style>
 <template>
@@ -31,7 +41,7 @@
             placeholder="请输入词句"
             clearable="{{true}}"
             />
-            <repeat wx:if="{{_pageMode===page_mode.meaning}}" for="{{meanings}}" key="index" index="index" item="item">
+            <repeat wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}" for="{{meanings}}" key="index" index="index" item="item">
                 <van-field
                 value="{{item}}"
                 name="meaning{{index}}"
@@ -47,8 +57,12 @@
                 />
             </repeat>
         </van-cell-group>
-        <view class="retract">
-            <button form-type="submit" type="primary" size="large">添加</button>
+        <view wx:if="{{_pageMode!==page_mode.group}}" class="retract btnCon">
+            <button type="primary" class="inline_btn_base editBtn " form-type="submit">添加</button>
+            <button type="default" class="inline_btn_base editBtn cancelBtn">删除</button>
+        </view>
+        <view  wx:else class="retract">
+            <button type="primary" form-type="submit">添加</button>
         </view>
     </form>
   </view>
@@ -105,9 +119,9 @@ export default class Edit extends wepy.page {
     addMeaning() {
       this.meanings.push('');
     },
-    reduceMeaning(e){
+    reduceMeaning(e) {
       const idx = e.currentTarget.dataset.idx;
-      Utils.arr_splice(this.meanings,idx);
+      Utils.arr_splice(this.meanings, idx);
     },
     submit(d) {
       const _modifyMode = this._modifyMode;
@@ -163,7 +177,7 @@ export default class Edit extends wepy.page {
         this._modifyMode = modify_mode.update;
         break;
       case page_mode.word:
-        this._modifyMode = modify_mode.update;
+        this._modifyMode = modify_mode.add;
         break;
     }
   }

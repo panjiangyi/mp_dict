@@ -11,7 +11,9 @@
           </van-cell-group>
         </demo-block>
     </repeat>
-    <view wx:if="{{ThisPageIsEmpty}}">暂无数据</view> 
+    <view  class="retract" wx:if="{{ThisPageIsEmpty}}">
+        <button @tap="goToAddWord" class="inline_btn_base" form-type="submit">添加单词</button>
+    </view> 
   </view>
 </template>
 
@@ -45,6 +47,9 @@ export default class Note extends wepy.page {
       const { _id } = e.currentTarget.dataset;
       /* 跳转到编辑页 */
       Utils.navi(`/pages/edit?rule=${JSON.stringify({_id})}&pageMode=meaning`);
+    },
+    goToAddWord(){
+       Utils.navi(`/pages/edit?pageMode=word`);
     }
   };
 
