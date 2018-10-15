@@ -49,7 +49,7 @@ export default class Note extends wepy.page {
       Utils.navi(`/pages/edit?rule=${JSON.stringify({_id})}&pageMode=meaning`);
     },
     goToAddWord(){
-       Utils.navi(`/pages/edit?pageMode=word`);
+       Utils.navi(`/pages/edit?rule=${JSON.stringify(this.rule)}&pageMode=word`);
     }
   };
 

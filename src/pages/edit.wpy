@@ -1,5 +1,4 @@
 <style lang="less">
-
 .cancelBtn {
   background-color: #fff;
   color: #000;
@@ -75,7 +74,8 @@ import Utils from '../utils/utils';
 import flag from '../cloud/flag';
 const { success, fail } = flag;
 const modify_mode = {
-  add: 'add',
+  addGroup: 'add group',
+  addWord: 'add word',
   update: 'update'
 };
 const page_mode = {
@@ -100,7 +100,7 @@ export default class Edit extends wepy.page {
     group: '',
     word: '',
     meanings: [''],
-    _modifyMode: modify_mode.add,
+    _modifyMode: modify_mode.addGroup,
     _pageMode: page_mode.group
   };
 
@@ -139,14 +139,25 @@ export default class Edit extends wepy.page {
         language,
         word
       };
-      if (_modifyMode === modify_mode.add) {
-        this.add(data);
+      if (_modifyMode === modify_mode.addGroup) {
+        this.addGroup(data);
+      } else if (_modifyMode === modify_mode.addWord) {
+        this.addWord(data);
       } else if (_modifyMode === modify_mode.update) {
         this.update(data);
       }
     }
   };
-  async add({ language, group, word, meanings }) {
+  async addGroup({ language, group, word, meanings }) {
+    const res = await dict.save(language, group, word, meanings);
+    if (res === fail) {
+      Utils.toastError();
+      return;
+    }
+    Utils.goback();
+  }
+  async addWord({ word, meanings }) {
+    const { language, group } = this.rule;
     const res = await dict.save(language, group, word, meanings);
     if (res === fail) {
       Utils.toastError();
@@ -164,20 +175,20 @@ export default class Edit extends wepy.page {
   }
   onLoad({ rule, pageMode }) {
     this._pageMode = page_mode[pageMode];
-    this.rule = rule;
+    if (rule != null) this.rule = JSON.parse(rule);
     this.decidePageMode();
     this.queryDictOnUpdateMode();
   }
   decidePageMode() {
     switch (this._pageMode) {
       case page_mode.group:
-        this._modifyMode = modify_mode.add;
+        this._modifyMode = modify_mode.addGroup;
         break;
       case page_mode.meaning:
         this._modifyMode = modify_mode.update;
         break;
       case page_mode.word:
-        this._modifyMode = modify_mode.add;
+        this._modifyMode = modify_mode.addWord;
         break;
     }
   }
@@ -187,7 +198,7 @@ export default class Edit extends wepy.page {
     }
   }
   async queryDict() {
-    const data = await dict.where(JSON.parse(this.rule));
+    const data = await dict.where(this.rule);
     const { _id, group, language, word, meanings } = data[0];
     this.id = _id;
     this.language = language;
