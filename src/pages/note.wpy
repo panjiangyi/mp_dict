@@ -2,7 +2,7 @@
 </style>
 <template>
   <view class="container">
-    <repeat for="{{list}}" key="word_index" index="word_index" item="word">
+    <repeat wx:if="{{!ThisPageIsEmpty}}" for="{{list}}" key="word_index" index="word_index" item="word">
         <demo-block title="{{word.word}}">
           <van-cell-group>
             <repeat for="{{word.meanings}}" key="meaning_index" index="meaning_index" item="meaning">
@@ -11,6 +11,7 @@
           </van-cell-group>
         </demo-block>
     </repeat>
+    <view wx:if="{{ThisPageIsEmpty}}">暂无数据</view> 
   </view>
 </template>
 
@@ -32,7 +33,12 @@ export default class Note extends wepy.page {
     list: []
   };
 
-  computed = {};
+  computed = {
+    ThisPageIsEmpty(){
+      const list = this.list;
+      return list.length===1&&list[0].word==null;
+    }
+  };
 
   methods = {
     edit(e) {

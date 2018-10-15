@@ -16,6 +16,9 @@ export default class {
             title
         })
     }
+    static arr_splice(arr,idx){
+        arr.splice(idx,1);
+    }
     static getOpenid() {
         return new Promise((res, rej) => {
             wx.login({

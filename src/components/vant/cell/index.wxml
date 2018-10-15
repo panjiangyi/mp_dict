@@ -7,6 +7,7 @@
     wx:if="{{ icon }}"
     name="{{ icon }}"
     custom-class="van-cell__left-icon"
+    bind:tap="onIconClick"
   />
   <slot wx:else name="icon" />
 

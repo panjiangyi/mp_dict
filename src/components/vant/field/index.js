@@ -107,6 +107,9 @@ VantComponent({
     },
     onConfirm: function onConfirm() {
       this.$emit('confirm', this.data.value);
+    },
+    onIconClicked(){
+      this.$emit('leftIconClicked');
     }
   }
 });

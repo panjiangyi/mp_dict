@@ -38,8 +38,10 @@
                 label="释义{{index+1}}"
                 placeholder="请输入释义"
                 clearable="{{true}}"
+                left-icon="delete"
                 icon="{{index+1===meanings.length?'add':null}}"
                 bindclickicon="addMeaning"
+                bindleftIconClicked="reduceMeaning"
                 @input="meaningInputed"
                 data-idx="{{index}}"
                 />
@@ -102,6 +104,10 @@ export default class Edit extends wepy.page {
     },
     addMeaning() {
       this.meanings.push('');
+    },
+    reduceMeaning(e){
+      const idx = e.currentTarget.dataset.idx;
+      Utils.arr_splice(this.meanings,idx);
     },
     submit(d) {
       const _modifyMode = this._modifyMode;

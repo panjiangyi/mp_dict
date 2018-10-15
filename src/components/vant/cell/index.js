@@ -38,6 +38,9 @@ VantComponent({
     }
   },
   methods: {
+    onIconClick:function onIconClick(){
+      this.triggerEvent('iconClicked')
+    },
     onClick: function onClick() {
       var url = this.data.url;
 
@@ -46,7 +49,6 @@ VantComponent({
           url: url
         });
       }
-
       this.$emit('click');
     }
   }
