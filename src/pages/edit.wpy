@@ -47,7 +47,7 @@
                 label="释义{{index+1}}"
                 placeholder="请输入释义"
                 clearable="{{true}}"
-                left-icon="{{index=='0'?'info-o':'delete'}}"
+                left-icon="delete"
                 icon="{{index+1===meanings.length?'add':null}}"
                 bindclickicon="addMeaning"
                 bindleftIconClicked="reduceMeaning"
@@ -120,6 +120,10 @@ export default class Edit extends wepy.page {
       this.meanings.push('');
     },
     reduceMeaning(e) {
+      if (this.meanings.length <= 1) {
+        Utils.toastError('再删就没啦');
+        return;
+      }
       const idx = e.currentTarget.dataset.idx;
       Utils.arr_splice(this.meanings, idx);
     },

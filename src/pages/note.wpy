@@ -9,7 +9,7 @@
 <template>
   <view class="container">
     <repeat wx:if="{{!ThisPageIsEmpty}}" for="{{list}}" key="word_index" index="word_index" item="word">
-        <demo-block title="{{word.word}}">
+        <demo-block wx:if="{{word_index!==0}}" title="{{word.word}}">
           <van-cell-group>
             <repeat for="{{word.meanings}}" key="meaning_index" index="meaning_index" item="meaning">
               <van-cell @tap="edit" data-_id="{{word._id}}" title="{{meaning_index+1}}. {{meaning}}" is-link="{{true}}"/>
