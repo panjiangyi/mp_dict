@@ -56,7 +56,7 @@
                 />
             </repeat>
         </van-cell-group>
-        <view wx:if="{{_pageMode!==page_mode.group}}" class="retract btnCon">
+        <view wx:if="{{_pageMode===page_mode.meaning}}" class="retract btnCon">
             <button type="primary" class="inline_btn_base editBtn " form-type="submit">添加</button>
             <button type='warn' class="inline_btn_base editBtn cancelBtn" @tap="deleteWord">删除</button>
         </view>
