@@ -47,7 +47,7 @@
                 label="释义{{index+1}}"
                 placeholder="请输入释义"
                 clearable="{{true}}"
-                left-icon="delete"
+                left-icon="{{index=='0'?'info-o':'delete'}}"
                 icon="{{index+1===meanings.length?'add':null}}"
                 bindclickicon="addMeaning"
                 bindleftIconClicked="reduceMeaning"
@@ -58,7 +58,7 @@
         </van-cell-group>
         <view wx:if="{{_pageMode!==page_mode.group}}" class="retract btnCon">
             <button type="primary" class="inline_btn_base editBtn " form-type="submit">添加</button>
-            <button type="default" class="inline_btn_base editBtn cancelBtn">删除</button>
+            <button type='warn' class="inline_btn_base editBtn cancelBtn" @tap="deleteWord">删除</button>
         </view>
         <view  wx:else class="retract">
             <button type="primary" form-type="submit">添加</button>
@@ -146,32 +146,32 @@ export default class Edit extends wepy.page {
       } else if (_modifyMode === modify_mode.update) {
         this.update(data);
       }
+    },
+    async deleteWord() {
+      const res = await dict.deleteWord(this.rule._id);
+      console.log('删除单词', res);
+      this.gobackWhenSuccess(res);
     }
   };
-  async addGroup({ language, group, word, meanings }) {
-    const res = await dict.save(language, group, word, meanings);
+  gobackWhenSuccess(res) {
     if (res === fail) {
       Utils.toastError();
       return;
     }
     Utils.goback();
+  }
+  async addGroup({ language, group, word, meanings }) {
+    const res = await dict.save(language, group, word, meanings);
+    this.gobackWhenSuccess(res);
   }
   async addWord({ word, meanings }) {
     const { language, group } = this.rule;
     const res = await dict.save(language, group, word, meanings);
-    if (res === fail) {
-      Utils.toastError();
-      return;
-    }
-    Utils.goback();
+    this.gobackWhenSuccess(res);
   }
   async update(d) {
     const res = await dict.update(this.id, d);
-    if (res === fail) {
-      Utils.toastError();
-      return;
-    }
-    Utils.goback();
+    this.gobackWhenSuccess(res);
   }
   onLoad({ rule, pageMode }) {
     this._pageMode = page_mode[pageMode];

@@ -54,6 +54,15 @@ class Dictionary {
         const res = await this.dict.where(rule).get();
         return res.data;
     }
+    async deleteWord(id){
+        const res = await this.dict.doc(id).remove()
+        if (res.errMsg !== 'document.remove:ok') {
+            Utils.toastError();
+            return fail
+        } else {
+            return success
+        }
+    }
 }
 
 export default new Dictionary()

@@ -1,4 +1,10 @@
 <style lang="less">
+.fixed {
+  position: fixed;
+  bottom: 20rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
 </style>
 <template>
   <view class="container">
@@ -11,8 +17,11 @@
           </van-cell-group>
         </demo-block>
     </repeat>
-    <view  class="retract" wx:if="{{ThisPageIsEmpty}}">
-        <button @tap="goToAddWord" class="inline_btn_base" form-type="submit">添加单词</button>
+    <view class="retract">
+        <button @tap="deleteGroup" class="inline_btn_base" type='warn'>删除分组</button>
+    </view> 
+    <view class="retract fixed">
+        <button @tap="goToAddWord" class="inline_btn_base">添加单词</button>
     </view> 
   </view>
 </template>
@@ -50,6 +59,9 @@ export default class Note extends wepy.page {
     },
     goToAddWord(){
        Utils.navi(`/pages/edit?rule=${JSON.stringify(this.rule)}&pageMode=word`);
+    },
+    deleteGroup(){
+      console.log('删除分组')
     }
   };
 
