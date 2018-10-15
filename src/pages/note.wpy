@@ -36,18 +36,22 @@ export default class Note extends wepy.page {
 
   methods = {
     edit(e) {
-      const {_id } = e.currentTarget.dataset;
+      const { _id } = e.currentTarget.dataset;
       /* 跳转到编辑页 */
-      Utils.navi(`/pages/edit?_id=${_id}`);
+      Utils.navi(`/pages/edit?rule=${JSON.stringify({_id})}&pageMode=meaning`);
     }
   };
 
   events = {};
   onLoad(rule) {
-    this.queryDict(rule);
+    this.rule = rule;
+    this.queryDict();
   }
-  async queryDict(rule) {
-    const data = await dict.where(rule);
+  onShow() {
+    this.queryDict();
+  }
+  async queryDict() {
+    const data = await dict.where(this.rule);
     this.list = data;
     this.$apply();
   }

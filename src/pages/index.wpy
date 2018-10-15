@@ -57,7 +57,7 @@ export default class Index extends wepy.page {
     },
     addLanguage(d){
       console.log('添加语言');
-      Utils.navi(`/pages/edit`);
+      Utils.navi(`/pages/edit?pageMode=group`);
     }
   };
 
@@ -71,6 +71,9 @@ export default class Index extends wepy.page {
     // dict.save('English','组2','js',['编程语言','做网站']);
     // dict.save('日本語','默认组','哇达西哇',['简单','很简单']);
     // dict.save('日本語','组2','搜噶',['难','很难']);
+  }
+  onShow(){
+    this.queryDict();
   }
   async queryDict() {
     const data = await dict.all();

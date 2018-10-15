@@ -8,6 +8,7 @@
     <form bindsubmit="submit">
         <van-cell-group>
             <van-field
+            wx:if="{{_pageMode===page_mode.group}}"
             value="{{language}}"
             name="language"
             label="语言"
@@ -15,6 +16,7 @@
             clearable="{{true}}"
             />
             <van-field
+            wx:if="{{_pageMode===page_mode.group}}"
             value="{{group}}"
             name="group"
             label="分组"
@@ -22,13 +24,14 @@
             clearable="{{true}}"
             />
             <van-field
+            wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}"
             value="{{word}}"
             name="word"
             label="词句"
             placeholder="请输入词句"
             clearable="{{true}}"
             />
-            <repeat for="{{meanings}}" key="index" index="index" item="item">
+            <repeat wx:if="{{_pageMode===page_mode.meaning}}" for="{{meanings}}" key="index" index="index" item="item">
                 <van-field
                 value="{{item}}"
                 name="meaning{{index}}"
@@ -55,9 +58,14 @@ import dict from '../cloud/dictionary';
 import Utils from '../utils/utils';
 import flag from '../cloud/flag';
 const { success, fail } = flag;
-const mode = {
+const modify_mode = {
   add: 'add',
   update: 'update'
+};
+const page_mode = {
+  group: '新增语言或分组',
+  meaning: '新增释义',
+  word: '新增词'
 };
 export default class Edit extends wepy.page {
   config = {
@@ -76,10 +84,15 @@ export default class Edit extends wepy.page {
     group: '',
     word: '',
     meanings: [''],
-    pageMode: mode.add
+    _modifyMode: modify_mode.add,
+    _pageMode: page_mode.group
   };
 
-  computed = {};
+  computed = {
+    page_mode() {
+      return page_mode;
+    }
+  };
 
   methods = {
     meaningInputed(d) {
@@ -91,7 +104,7 @@ export default class Edit extends wepy.page {
       this.meanings.push('');
     },
     submit(d) {
-      const pageMode = this.pageMode;
+      const _modifyMode = this._modifyMode;
       const originData = d.detail.value;
       const meanings = [];
       for (let key in originData) {
@@ -106,9 +119,9 @@ export default class Edit extends wepy.page {
         language,
         word
       };
-      if (pageMode === mode.add) {
+      if (_modifyMode === modify_mode.add) {
         this.add(data);
-      } else if (pageMode === mode.update) {
+      } else if (_modifyMode === modify_mode.update) {
         this.update(data);
       }
     }
@@ -129,16 +142,32 @@ export default class Edit extends wepy.page {
     }
     Utils.goback();
   }
-  onLoad(rule) {
-    if (JSON.stringify(rule) === '{}') {
-      this.pageMode = mode.add;
-    } else {
-      this.pageMode = mode.update;
-      this.queryDict(rule);
+  onLoad({ rule, pageMode }) {
+    this._pageMode = page_mode[pageMode];
+    this.rule = rule;
+    this.decidePageMode();
+    this.queryDictOnUpdateMode();
+  }
+  decidePageMode() {
+    switch (this._pageMode) {
+      case page_mode.group:
+        this._modifyMode = modify_mode.add;
+        break;
+      case page_mode.meaning:
+        this._modifyMode = modify_mode.update;
+        break;
+      case page_mode.word:
+        this._modifyMode = modify_mode.update;
+        break;
     }
   }
-  async queryDict(rule) {
-    const data = await dict.where(rule);
+  queryDictOnUpdateMode() {
+    if (this._modifyMode === modify_mode.update) {
+      this.queryDict();
+    }
+  }
+  async queryDict() {
+    const data = await dict.where(JSON.parse(this.rule));
     const { _id, group, language, word, meanings } = data[0];
     this.id = _id;
     this.language = language;
