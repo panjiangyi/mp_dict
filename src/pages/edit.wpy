@@ -149,29 +149,22 @@ export default class Edit extends wepy.page {
     },
     async deleteWord() {
       const res = await dict.deleteWord(this.rule._id);
-      console.log('删除单词', res);
-      this.gobackWhenSuccess(res);
+      Utils.gobackWhenSuccess(res);
     }
   };
-  gobackWhenSuccess(res) {
-    if (res === fail) {
-      Utils.toastError();
-      return;
-    }
-    Utils.goback();
-  }
+
   async addGroup({ language, group, word, meanings }) {
     const res = await dict.save(language, group, word, meanings);
-    this.gobackWhenSuccess(res);
+    Utils.gobackWhenSuccess(res);
   }
   async addWord({ word, meanings }) {
     const { language, group } = this.rule;
     const res = await dict.save(language, group, word, meanings);
-    this.gobackWhenSuccess(res);
+    Utils.gobackWhenSuccess(res);
   }
   async update(d) {
     const res = await dict.update(this.id, d);
-    this.gobackWhenSuccess(res);
+    Utils.gobackWhenSuccess(res);
   }
   onLoad({ rule, pageMode }) {
     this._pageMode = page_mode[pageMode];

@@ -1,10 +1,12 @@
+import flag from '../cloud/flag';
+const { success, fail } = flag;
 export default class {
     static navi(url) {
         wx.navigateTo({
             url
         })
     }
-    static goback(delta=1){
+    static goback(delta = 1) {
         wx.navigateBack({
             delta
         })
@@ -16,8 +18,15 @@ export default class {
             title
         })
     }
-    static arr_splice(arr,idx){
-        arr.splice(idx,1);
+    static gobackWhenSuccess(res) {
+        if (res === fail) {
+            Utils.toastError();
+            return;
+        }
+        this.goback();
+    }
+    static arr_splice(arr, idx) {
+        arr.splice(idx, 1);
     }
     static getOpenid() {
         return new Promise((res, rej) => {

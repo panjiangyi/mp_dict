@@ -54,9 +54,20 @@ class Dictionary {
         const res = await this.dict.where(rule).get();
         return res.data;
     }
-    async deleteWord(id){
+    async deleteWord(id) {
         const res = await this.dict.doc(id).remove()
         if (res.errMsg !== 'document.remove:ok') {
+            Utils.toastError();
+            return fail
+        } else {
+            return success
+        }
+    }
+    async deleteGroup(rule) {
+        const { data } = await this.dict.where(rule).get();
+        const ids = data.map(item => item._id);
+        const res = await Promise.all(ids.map(id => this.deleteWord(id)))
+        if (res.indexOf(false) > -1) {
             Utils.toastError();
             return fail
         } else {

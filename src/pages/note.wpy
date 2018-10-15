@@ -60,8 +60,9 @@ export default class Note extends wepy.page {
     goToAddWord(){
        Utils.navi(`/pages/edit?rule=${JSON.stringify(this.rule)}&pageMode=word`);
     },
-    deleteGroup(){
-      console.log('删除分组')
+    async deleteGroup(){
+       const res = await dict.deleteGroup(this.rule);
+       Utils.gobackWhenSuccess(res);
     }
   };
 
