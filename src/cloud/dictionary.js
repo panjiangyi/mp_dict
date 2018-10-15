@@ -64,6 +64,7 @@ class Dictionary {
         }
     }
     async deleteGroup(rule) {
+        /* 需校验openid，否则会删除其他用户的数据 */
         const { data } = await this.dict.where(rule).get();
         const ids = data.map(item => item._id);
         const res = await Promise.all(ids.map(id => this.deleteWord(id)))
