@@ -34,8 +34,8 @@ export default class {
                 // 云函数名称
                 name: 'getOpenid',
                 // 传给云函数的参数
-                success(res) {
-                    res(res.result.openId);
+                success(d) {
+                    res(d.result.openId);
                 },
                 fail(e) {
                     rej(e)
