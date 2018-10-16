@@ -17,9 +17,9 @@
           </van-cell-group>
         </demo-block>
     </repeat>
-    <!-- <view class="retract">
+    <view class="retract">
         <button @tap="deleteGroup" class="inline_btn_base" type='warn'>删除分组</button>
-    </view>  -->
+    </view> 
     <view class="retract fixed">
         <button @tap="goToAddWord" class="inline_btn_base">添加单词</button>
     </view> 

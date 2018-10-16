@@ -23,6 +23,10 @@
             label="语言"
             placeholder="请输入语言"
             clearable="{{true}}"
+            confirmType="next"
+            @confirm="typeNext"
+            @focus="onFocus(0)"
+            focus="{{focusIdx===0}}"
             />
             <van-field
             wx:if="{{_pageMode===page_mode.group}}"
@@ -31,6 +35,10 @@
             label="分组"
             placeholder="请输入分组"
             clearable="{{true}}"
+            confirmType="next"
+            @confirm="typeNext"
+            @focus="onFocus(1)"
+            focus="{{focusIdx===1}}"
             />
             <van-field
             wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}"
@@ -39,6 +47,10 @@
             label="词句"
             placeholder="请输入词句"
             clearable="{{true}}"
+            confirmType="next"
+            @confirm="typeNext"
+            @focus="onFocus(2)"
+            focus="{{focusIdx===2}}"
             />
             <repeat wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}" for="{{meanings}}" key="index" index="index" item="item">
                 <van-field
@@ -53,11 +65,15 @@
                 bindleftIconClicked="reduceMeaning"
                 @input="meaningInputed"
                 data-idx="{{index}}"
+                confirmType="next"
+                @confirm="typeNext"
+                @focus="onFocus({{index+3}})"
+                focus="{{focusIdx===index+3}}"
                 />
             </repeat>
         </van-cell-group>
         <view wx:if="{{_pageMode===page_mode.meaning}}" class="retract btnCon">
-            <button type="primary" class="inline_btn_base editBtn " form-type="submit">添加</button>
+            <button type="primary" class="inline_btn_base editBtn " form-type="submit">修改</button>
             <button type='warn' class="inline_btn_base editBtn cancelBtn" @tap="deleteWord">删除</button>
         </view>
         <view  wx:else class="retract">
@@ -101,7 +117,8 @@ export default class Edit extends wepy.page {
     word: '',
     meanings: [''],
     _modifyMode: modify_mode.addGroup,
-    _pageMode: page_mode.group
+    _pageMode: page_mode.group,
+    focusIdx: 0
   };
 
   computed = {
@@ -111,6 +128,14 @@ export default class Edit extends wepy.page {
   };
 
   methods = {
+    typeNext(d) {
+      this.focusIdx++;
+    },
+    onFocus(idx) {
+      idx = Number(idx);
+      if (Number(this.focusIdx) === idx) return;
+      this.focusIdx = idx;
+    },
     meaningInputed(d) {
       const value = d.detail;
       const idx = d.currentTarget.dataset.idx;
@@ -144,10 +169,13 @@ export default class Edit extends wepy.page {
         word
       };
       if (_modifyMode === modify_mode.addGroup) {
+        if (this.groupValueIsNotFulliled(data)) return;
         this.addGroup(data);
       } else if (_modifyMode === modify_mode.addWord) {
+        if (this.wordValueIsNotFulliled(data)) return;
         this.addWord(data);
       } else if (_modifyMode === modify_mode.update) {
+        if (this.wordValueIsNotFulliled(data)) return;
         this.update(data);
       }
     },
@@ -156,7 +184,28 @@ export default class Edit extends wepy.page {
       Utils.gobackWhenSuccess(res);
     }
   };
-
+  groupValueIsNotFulliled({ language, group }) {
+    if (language === '') {
+      Utils.toastError('请输入语言');
+      return true;
+    }
+    if (group === '') {
+      Utils.toastError('请输入分组');
+      return true;
+    }
+    return false;
+  }
+  wordValueIsNotFulliled({ word, meanings }) {
+    if (word === '') {
+      Utils.toastError('请输入词句');
+      return true;
+    }
+    if (meanings.indexOf('') > -1) {
+      Utils.toastError('有空格还没填');
+      return true;
+    }
+    return false;
+  }
   async addGroup({ language, group, word, meanings }) {
     const res = await dict.save(language, group, word, meanings);
     Utils.gobackWhenSuccess(res);
@@ -175,6 +224,7 @@ export default class Edit extends wepy.page {
     if (rule != null) this.rule = JSON.parse(rule);
     this.decidePageMode();
     this.queryDictOnUpdateMode();
+    this.HowBigIsfocusIdx();
   }
   decidePageMode() {
     switch (this._pageMode) {
@@ -203,6 +253,19 @@ export default class Edit extends wepy.page {
     this.word = word;
     this.meanings = meanings;
     this.$apply();
+  }
+  HowBigIsfocusIdx() {
+    switch (this._pageMode) {
+      case page_mode.group:
+        this.focusIdx = 0;
+        break;
+      case page_mode.meaning:
+        this.focusIdx = 2;
+        break;
+      case page_mode.word:
+        this.focusIdx = 3;
+        break;
+    }
   }
 }
 </script>

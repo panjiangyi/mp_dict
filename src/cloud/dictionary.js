@@ -18,12 +18,12 @@ class Dictionary {
         return await Utils.getOpenid();
     }
     async all() {
-        const _openid = this._getOpenid()
+        const _openid = this.openid =  await this._getOpenid()
         const res = await this.dict
-            .where({
-                _openid
-            })
-            .get();
+        .where({
+            _openid
+        })
+        .get();
         return res.data
     }
     async read(word) {
@@ -65,7 +65,10 @@ class Dictionary {
     }
     async deleteGroup(rule) {
         /* 需校验openid，否则会删除其他用户的数据 */
-        const { data } = await this.dict.where(rule).get();
+        const { data } = await this.dict.where({
+            _openid:this.openid,
+            ...rule
+        }).get();
         const ids = data.map(item => item._id);
         const res = await Promise.all(ids.map(id => this.deleteWord(id)))
         if (res.indexOf(false) > -1) {
