@@ -23,6 +23,9 @@
             label="语言"
             placeholder="请输入语言"
             clearable="{{true}}"
+            confirmType="next"
+            @confirm="typeNext"
+            :focus.sync="focusArr[0]"
             />
             <van-field
             wx:if="{{_pageMode===page_mode.group}}"
@@ -31,6 +34,9 @@
             label="分组"
             placeholder="请输入分组"
             clearable="{{true}}"
+            confirmType="next"
+            @confirm="typeNext"
+            :focus.sync="focusArr[1]"
             />
             <van-field
             wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}"
@@ -39,6 +45,9 @@
             label="词句"
             placeholder="请输入词句"
             clearable="{{true}}"
+            confirmType="next"
+            @confirm="typeNext"
+            :focus.sync="focusArr[2]"
             />
             <repeat wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}" for="{{meanings}}" key="index" index="index" item="item">
                 <van-field
@@ -53,6 +62,9 @@
                 bindleftIconClicked="reduceMeaning"
                 @input="meaningInputed"
                 data-idx="{{index}}"
+                confirmType="next"
+                @confirm="typeNext"
+                :focus.sync="focusArr[index+3]"
                 />
             </repeat>
         </van-cell-group>
@@ -101,7 +113,8 @@ export default class Edit extends wepy.page {
     word: '',
     meanings: [''],
     _modifyMode: modify_mode.addGroup,
-    _pageMode: page_mode.group
+    _pageMode: page_mode.group,
+    focusArr:[true,false,false,false,false,false,false,]
   };
 
   computed = {
@@ -111,6 +124,10 @@ export default class Edit extends wepy.page {
   };
 
   methods = {
+    typeNext(d){
+      console.log('typeNext',d);
+      
+    },
     meaningInputed(d) {
       const value = d.detail;
       const idx = d.currentTarget.dataset.idx;
