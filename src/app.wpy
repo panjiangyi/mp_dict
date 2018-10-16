@@ -34,6 +34,16 @@ export default class extends wepy.app {
     });
   }
 
-  onLaunch() {}
+  onLaunch() {
+    wx.cloud.callFunction({
+      // 云函数名称
+      name: 'getOpenid',
+      // 传给云函数的参数
+      success: function(res) {
+        console.log(res.result); // 3
+      },
+      fail: console.error
+    });
+  }
 }
 </script>
