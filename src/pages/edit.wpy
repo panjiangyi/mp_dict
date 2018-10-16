@@ -25,7 +25,8 @@
             clearable="{{true}}"
             confirmType="next"
             @confirm="typeNext"
-            :focus.sync="focusArr[0]"
+            @focus="onFocus(0)"
+            focus="{{focusIdx===0}}"
             />
             <van-field
             wx:if="{{_pageMode===page_mode.group}}"
@@ -36,7 +37,8 @@
             clearable="{{true}}"
             confirmType="next"
             @confirm="typeNext"
-            :focus.sync="focusArr[1]"
+            @focus="onFocus(1)"
+            focus="{{focusIdx===1}}"
             />
             <van-field
             wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}"
@@ -47,7 +49,8 @@
             clearable="{{true}}"
             confirmType="next"
             @confirm="typeNext"
-            :focus.sync="focusArr[2]"
+            @focus="onFocus(2)"
+            focus="{{focusIdx===2}}"
             />
             <repeat wx:if="{{_pageMode===page_mode.word||_pageMode===page_mode.meaning}}" for="{{meanings}}" key="index" index="index" item="item">
                 <van-field
@@ -64,7 +67,8 @@
                 data-idx="{{index}}"
                 confirmType="next"
                 @confirm="typeNext"
-                :focus.sync="focusArr[index+3]"
+                @focus="onFocus({{index+3}})"
+                focus="{{focusIdx===index+3}}"
                 />
             </repeat>
         </van-cell-group>
@@ -114,19 +118,23 @@ export default class Edit extends wepy.page {
     meanings: [''],
     _modifyMode: modify_mode.addGroup,
     _pageMode: page_mode.group,
-    focusArr:[true,false,false,false,false,false,false,]
+    focusIdx: 0
   };
 
   computed = {
     page_mode() {
       return page_mode;
-    },
+    }
   };
 
   methods = {
-    typeNext(d){
-      console.log('typeNext',d);
-      
+    typeNext(d) {
+      this.focusIdx++;
+    },
+    onFocus(idx) {
+      idx = Number(idx);
+      if (Number(this.focusIdx) === idx) return;
+      this.focusIdx = idx;
     },
     meaningInputed(d) {
       const value = d.detail;
@@ -192,7 +200,7 @@ export default class Edit extends wepy.page {
       Utils.toastError('请输入词句');
       return true;
     }
-    if (meanings.indexOf('')>-1) {
+    if (meanings.indexOf('') > -1) {
       Utils.toastError('有空格还没填');
       return true;
     }
@@ -216,6 +224,7 @@ export default class Edit extends wepy.page {
     if (rule != null) this.rule = JSON.parse(rule);
     this.decidePageMode();
     this.queryDictOnUpdateMode();
+    this.HowBigIsfocusIdx();
   }
   decidePageMode() {
     switch (this._pageMode) {
@@ -244,6 +253,19 @@ export default class Edit extends wepy.page {
     this.word = word;
     this.meanings = meanings;
     this.$apply();
+  }
+  HowBigIsfocusIdx() {
+    switch (this._pageMode) {
+      case page_mode.group:
+        this.focusIdx = 0;
+        break;
+      case page_mode.meaning:
+        this.focusIdx = 2;
+        break;
+      case page_mode.word:
+        this.focusIdx = 3;
+        break;
+    }
   }
 }
 </script>
