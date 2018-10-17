@@ -39,7 +39,7 @@ import dict from '../cloud/dictionary';
 import Utils from '../utils/utils';
 export default class Note extends wepy.page {
   config = {
-    navigationBarTitleText: 'note',
+    navigationBarTitleText: 'Note',
     usingComponents: {
       'demo-block': '../components/vant/demo-block',
       'van-cell': '../components/vant/cell',
@@ -70,10 +70,10 @@ export default class Note extends wepy.page {
       Utils.navi(`/pages/edit?rule=${JSON.stringify(this.rule)}&pageMode=word`);
     },
     async deleteGroup() {
-      const comfirmed = await Utils.showActionSheet();
-      if (!comfirmed) return;
-      const comfirmedAgain = await Utils.showActionSheet(['删除后无法恢复，真的要删除吗？']);
-      if (!comfirmedAgain) return;
+      const uncomfirmed = await Utils.showActionSheet();
+      if (uncomfirmed) return;
+      const uncomfirmedAgain = await Utils.showActionSheet(['删除后无法恢复，真的要删除吗？']);
+      if (uncomfirmedAgain) return;
       const res = await dict.deleteGroup(this.rule);
       Utils.gobackWhenSuccess(res);
     }
