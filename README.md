@@ -9,4 +9,4 @@
 所以，史上最好用单词本，无需查词功能，只需提供全面的编辑和记录功能。便可解决以上所有痛点！
 
 ## 扫描使用:
-![Alt text](./mpqr.jpg "Optional title")
+![Alt text](./mpqr_mini.jpg "Optional title")
