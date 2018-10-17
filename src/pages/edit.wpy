@@ -263,7 +263,7 @@ export default class Edit extends wepy.page {
         this.focusIdx = 2;
         break;
       case page_mode.word:
-        this.focusIdx = 3;
+        this.focusIdx = 2;
         break;
     }
   }
