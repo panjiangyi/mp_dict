@@ -1,6 +1,18 @@
 import flag from '../cloud/flag';
 const { success, fail } = flag;
 export default class {
+    static showActionSheet(itemList = ['确认']) {
+        return new Promise((resole, reject) => {
+            wx.showActionSheet({
+                itemList,
+                success: () => resole(true),
+                fail(e) {
+                    console.info('showActionSheet', e)
+                    resole(false);
+                },
+            });
+        })
+    }
     static navi(url) {
         wx.navigateTo({
             url

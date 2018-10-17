@@ -5,6 +5,13 @@
   width: 100%;
   box-sizing: border-box;
 }
+.delete_btn_con {
+  margin-top: 30rpx;
+}
+.delete_btn {
+  font-size: 20rpx;
+  display: inline-block;
+}
 </style>
 <template>
   <view class="container">
@@ -17,8 +24,8 @@
           </van-cell-group>
         </demo-block>
     </repeat>
-    <view class="retract">
-        <button @tap="deleteGroup" class="inline_btn_base" type='warn'>删除分组</button>
+    <view class="retract delete_btn_con">
+        <button @tap="deleteGroup" class="delete_btn" type='warn'>删除分组</button>
     </view> 
     <view class="retract fixed">
         <button @tap="goToAddWord" class="inline_btn_base">添加单词</button>
@@ -45,9 +52,9 @@ export default class Note extends wepy.page {
   };
 
   computed = {
-    ThisPageIsEmpty(){
+    ThisPageIsEmpty() {
       const list = this.list;
-      return list.length===1&&list[0].word==null;
+      return list.length === 1 && list[0].word == null;
     }
   };
 
@@ -55,14 +62,20 @@ export default class Note extends wepy.page {
     edit(e) {
       const { _id } = e.currentTarget.dataset;
       /* 跳转到编辑页 */
-      Utils.navi(`/pages/edit?rule=${JSON.stringify({_id})}&pageMode=meaning`);
+      Utils.navi(
+        `/pages/edit?rule=${JSON.stringify({ _id })}&pageMode=meaning`
+      );
     },
-    goToAddWord(){
-       Utils.navi(`/pages/edit?rule=${JSON.stringify(this.rule)}&pageMode=word`);
+    goToAddWord() {
+      Utils.navi(`/pages/edit?rule=${JSON.stringify(this.rule)}&pageMode=word`);
     },
-    async deleteGroup(){
-       const res = await dict.deleteGroup(this.rule);
-       Utils.gobackWhenSuccess(res);
+    async deleteGroup() {
+      const comfirmed = await Utils.showActionSheet();
+      if (!comfirmed) return;
+      const comfirmedAgain = await Utils.showActionSheet(['删除后无法恢复，真的要删除吗？']);
+      if (!comfirmedAgain) return;
+      const res = await dict.deleteGroup(this.rule);
+      Utils.gobackWhenSuccess(res);
     }
   };
 
