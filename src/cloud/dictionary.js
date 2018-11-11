@@ -18,13 +18,8 @@ class Dictionary {
         return await Utils.getOpenid();
     }
     async all() {
-        const _openid = this.openid =  await this._getOpenid()
-        const res = await this.dict
-        .where({
-            _openid
-        })
-        .get();
-        return res.data
+        this.openid = await this._getOpenid()
+        return await this.where()
     }
     async read(word) {
         const res = await this.dict.doc(word).get();
@@ -50,9 +45,16 @@ class Dictionary {
         const res = await this.dict.doc(id).update({ data })
         return success;
     }
-    async where(rule) {
-        const res = await this.dict.where(rule).get();
-        return res.data;
+    async where(rule = {}) {
+        let result = [];
+        let i = 0;
+        while (true) {
+            const { data } = await this.dict.skip(i).where({ ...rule, _openid: this.openid }).get();
+            if (data.length === 0) break;
+            result = result.concat(data);
+            i += 20;
+        }
+        return result;
     }
     async deleteWord(id) {
         const res = await this.dict.doc(id).remove()
@@ -65,8 +67,7 @@ class Dictionary {
     }
     async deleteGroup(rule) {
         /* 需校验openid，否则会删除其他用户的数据 */
-        const { data } = await this.dict.where({
-            _openid:this.openid,
+        const { data } = await this.where({
             ...rule
         }).get();
         const ids = data.map(item => item._id);

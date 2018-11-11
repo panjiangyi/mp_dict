@@ -75,7 +75,6 @@ export default class Index extends wepy.page {
       Utils.navi(`/pages/note?language=${lan}&group=${group}`);
     },
     addLanguage(d) {
-      console.log('添加语言');
       Utils.navi(`/pages/edit?pageMode=group`);
     }
   };

@@ -1,4 +1,7 @@
 <style lang="less">
+.container {
+  padding-bottom:120rpx;
+}
 .fixed {
   position: fixed;
   bottom: 20rpx;
