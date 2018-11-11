@@ -58,4 +58,13 @@ export default class {
         })
 
     }
+    static loading(){
+        wx.showLoading({
+            title:'加载中',
+            mask:true,
+        })
+    }
+    static loaded(){
+        wx.hideLoading()
+    }
 } 

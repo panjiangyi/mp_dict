@@ -15,11 +15,19 @@
   margin: auto;
   position: fixed;
   top: 0;
-  bottom:0;
+  bottom: 0;
   left: 0;
   right: 0;
   width: 300rpx;
   height: 300rpx;
+}
+.contact {
+  position: fixed;
+  bottom: 10rpx;
+  width: 100%;
+  text-align: center;
+  color: #333;
+  font-size: 14px;
 }
 </style>
 <template>
@@ -39,6 +47,9 @@
     </repeat>
     <view @tap="addLanguage" class="icon">
         <van-icon @click-icon.user="clickicon" name="add" size="128rpx"  />
+    </view>
+    <view wx:if="{{!emptyPage}}" class='contact'>
+          发现bug可以告诉我:panjiangyi12@163.com
     </view>
   </view>
 </template>
